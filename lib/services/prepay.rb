@@ -131,14 +131,14 @@ module Micropayment
       end
 
       # simuliert den Ablauf einer Session löst die Benachrichtigung sessionStatus mit dem Status "CLOSED" aus
-      def sessionExpireTest
+      def sessionExpireTest(options={})
         assert_valid_keys(options, :sessionId)
         assert_keys_exists(options, :sessionId)
         execute(:sessionExpireTest, options)
       end
 
       # simuliert die automatische Rücküberweisung für überzahlte Beträge
-      def sessionRefundTest
+      def sessionRefundTest(options={})
         assert_valid_keys(options, :sessionId)
         assert_keys_exists(options, :sessionId)
         execute(:sessionRefundTest, options)
