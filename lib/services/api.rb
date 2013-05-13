@@ -15,7 +15,8 @@ module Micropayment
       ensure_api_key!
       data[:action]     = method
       data[:accessKey]  = Config.api_key
-      data[:testMode] ||= Config.sandbox_param
+      # Workaround micropayment API
+      data[:testMode] ||= Config.sandbox_param ? 1 : 0
       data.delete_if {|k,v| v.nil? }
       uri = Addressable::URI.parse(url)
       uri.query_values = data
