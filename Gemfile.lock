@@ -24,7 +24,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  addressable
+  addressable (~> 2.2.8)
   bundler (>= 1.0.0)
   jeweler (~> 1.8.3)
   rcov
