@@ -3,7 +3,7 @@
 module Micropayment
   class Debit
 
-    URL = Config::BASE_URL + "debit/v1.4/nvp/"
+    URL = Config::BASE_URL + "debit/v2.0/nvp/"
 
     class << self
 
@@ -54,8 +54,8 @@ module Micropayment
 
       # "erzeugt oder ändert Bankverbindung eines Kunden"
       def bankaccountSet(options={})
-        assert_valid_keys(options, :customerId, :bankCode, :accountNumber, :accountHolder, :country)
-        assert_keys_exists(options, :customerId, :bankCode, :accountNumber, :accountHolder)
+        assert_valid_keys(options, :customerId, :bankCode, :accountNumber, :iban, :bic, :accountHolder, :country)
+        assert_keys_exists(options, :customerId, :accountHolder)
         execute(:bankaccountSet, options)
       end
 
@@ -68,28 +68,26 @@ module Micropayment
 
       # "prüft Bankleitzahl und ermittelt Banknamen"
       def bankCheck(options={})
-        assert_valid_keys(options, :country, :bankCode)
-        assert_keys_exists(options, :bankCode)
+        assert_valid_keys(options, :country, :bankCode, :iban, :bic)
         execute(:bankCheck, options)
       end
 
       # "prüft Bankverbindung und ermittelt Banknamen"
       def bankaccountCheck(options={})
-        assert_valid_keys(options, :country, :bankCode, :accountNumber)
-        assert_keys_exists(options, :bankCode, :accountNumber)
+        assert_valid_keys(options, :country, :bankCode, :accountNumber, :iban, :bic)
         execute(:bankaccountCheck, options)
       end
 
       # "Sperrt Bankverbindung oder gibt sie frei"
       def bankaccountBar(options={})
-        assert_valid_keys(options, :country, :bankCode, :accountNumber, :barStatus)
-        assert_keys_exists(options, :bankCode, :accountNumber, :barStatus)
+        assert_valid_keys(options, :country, :bankCode, :accountNumber, :barStatus, :iban, :bic)
+        assert_keys_exists(options, :barStatus)
         execute(:bankaccountBar, options)
       end
 
       # "erzeugt oder ändert Adressdaten eines Kunden"
       def addressSet(options={})
-        assert_valid_keys(options, :customerId, :firstName, :surName, :street, :zip, :city, :country)
+        assert_valid_keys(options, :customerId, :firstName, :surName, :street, :zip, :city, :country, :company)
         assert_keys_exists(options, :customerId, :firstName, :surName, :street, :zip, :city)
         execute(:addressSet, options)
       end
@@ -118,7 +116,7 @@ module Micropayment
       # "erzeugt einen neuen Bezahlvorgang"
       # => "löst die Benachrichtigung sessionStatus mit dem Status "INIT" bzw. "REINIT" aus"
       def sessionCreate(options={})
-        assert_valid_keys(options, :customerId, :sessionId, :project, :projectCampaign, :account, :webmasterCampaign, :amount, :currency, :title, :payText, :ip, :freeParams)
+        assert_valid_keys(options, :customerId, :sessionId, :project, :projectCampaign, :account, :webmasterCampaign, :amount, :currency, :title, :payText, :ip, :freeParams, :mandateRef)
         assert_keys_exists(options, :customerId, :project)
         execute(:sessionCreate, options)
       end
@@ -180,7 +178,7 @@ module Micropayment
       # "Veranlasst eine (Teil-)Gutschrift und überweist sie zurück"
       # => "erzeugt eine neue Transaktion mit dem Typ "REFUND" und löst die Benachrichtigung transactionCreate aus"
       def sessionRefund(options={})
-        assert_valid_keys(options, :sessionId, :bankCode, :accountNumber, :accountHolder, :amount, :payText)
+        assert_valid_keys(options, :sessionId, :bankCode, :accountNumber, :accountHolder, :amount, :payText, :iban, :bic, :country)
         assert_keys_exists(options, :sessionId)
         execute(:sessionRefund, options)
       end
