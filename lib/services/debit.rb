@@ -88,7 +88,7 @@ module Micropayment
       # "erzeugt oder ändert Adressdaten eines Kunden"
       def addressSet(options={})
         assert_valid_keys(options, :customerId, :firstName, :surName, :street, :zip, :city, :country, :company)
-        assert_keys_exists(options, :customerId, :firstName, :surName, :street, :zip, :city)
+        assert_keys_exists(options, :customerId)
         execute(:addressSet, options)
       end
 
