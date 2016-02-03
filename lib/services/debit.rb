@@ -161,7 +161,7 @@ module Micropayment
       # => "erzeugt eine neue Transaktion mit dem Typ "REVERSAL" und löst die Benachrichtigung transactionCreate aus"
       # => "löst die Benachrichtigung sessionStatus mit dem Status "REVERSED" aus"
       def sessionReverseTest(options={})
-        assert_valid_keys(options, :sessionId)
+        assert_valid_keys(options, :sessionId, :reverseCode, :reverseReason)
         assert_keys_exists(options, :sessionId)
         execute(:sessionReverseTest, options.merge(:testMode => 1))
       end
