@@ -2,11 +2,11 @@
 
 module Micropayment
   class Prepay
-  
-    URL = Config::BASE_URL + "prepay/v1.0/nvp/"
+
+    URL = Config::BASE_URL + "prepay/v1.1/nvp/"
 
     class << self
-       
+
       def execute(method, data={})
         API.call(URL, method, data)
       end
@@ -19,6 +19,13 @@ module Micropayment
         Micropayment.assert_keys_exists *opts
       end
 
+
+      # "ermittelt Konfigurationsparameter"
+      def config(options={})
+        assert_valid_keys(options, :project)
+        assert_keys_exists(options, :project)
+        execute(:config, options)
+      end
 
       # "löscht alle Kunden und Transaktionen in der Testumgebung"
       def reset_test
@@ -54,8 +61,8 @@ module Micropayment
 
       # "erzeugt oder ändert Adressdaten eines Kunden"
       def addressSet(options={})
-        assert_valid_keys(options, :customerId, :form, :firstName, :surName, :street, :zip, :city, :country)
-        assert_keys_exists(options, :customerId, :firstName, :surName, :street, :zip, :city)
+        assert_valid_keys(options, :customerId, :form, :firstName, :surName, :address, :street, :zip, :city, :country)
+        assert_keys_exists(options, :customerId, :firstName, :surName)
         execute(:addressSet, options)
       end
 
@@ -68,7 +75,7 @@ module Micropayment
 
       # "erzeugt oder ändert Kontaktdaten eines Kunden"
       def contactDataSet(options={})
-        assert_valid_keys(options, :customerId, :email, :phone, :mobilei, :language)
+        assert_valid_keys(options, :customerId, :email, :phone, :mobile, :language)
         assert_keys_exists(options, :customerId)
         execute(:contactDataSet, options)
       end
@@ -83,7 +90,7 @@ module Micropayment
       # "erzeugt einen neuen Bezahlvorgang"
       # => "löst die Benachrichtigung sessionStatus mit dem Status "INIT" bzw. "REINIT" aus"
       def sessionCreate(options={})
-        assert_valid_keys(options, :customerId, :sessionId, :project, :projectCampaign, :account, :webmasterCampaign, :amount, :currency, :title, :payText, :expireDays, :ip, :freeParams)
+        assert_valid_keys(options, :customerId, :sessionMode, :sessionId, :project, :projectCampaign, :account, :webmasterCampaign, :amount, :currency, :title, :payText, :expireDays, :ip, :freeParams)
         assert_keys_exists(options, :customerId, :project)
         execute(:sessionCreate, options)
       end
@@ -109,35 +116,37 @@ module Micropayment
         execute(:sessionList, options)
       end
 
-      # Veranlasst eine Minderung des Betrags und ggf. eine (Teil-)Gutschrift
+      # "Veranlasst eine Minderung des Betrags und ggf. eine (Teil-)Gutschrift"
       def sessionChange(options={})
         assert_valid_keys(options, :sessionId, :amount)
         assert_keys_exists(options, :sessionId, :amount)
         execute(:sessionChange, options)
       end
 
-      # simuliert einen Zahlungeingang für eine oder mehrere Sessions
+      # "simuliert einen Zahlungeingang für eine oder mehrere Sessions"
       def sessionPayinTest(options={})
         assert_valid_keys(options, :sessionId, :amount, :bankCountry, :bankCode, :accountNumber, :accountHolder)
         assert_keys_exists(options, :sessionId, :amount)
         execute(:sessionPayinTest, options)
       end
 
-      # simuliert das Auslösen einer Erinnerungsmail löst die Benachrichtigung sessionRemind aus
+      # "simuliert das Auslösen einer Erinnerungsmail"
+      # => "löst die Benachrichtigung sessionRemind aus"
       def sessionRemindTest(options={})
         assert_valid_keys(options, :sessionId, :lastRemind)
         assert_keys_exists(options, :sessionId)
         execute(:sessionRemindTest, options)
       end
 
-      # simuliert den Ablauf einer Session löst die Benachrichtigung sessionStatus mit dem Status "CLOSED" aus
+      # "simuliert den Ablauf einer Session"
+      # => "löst die Benachrichtigung sessionStatus mit dem Status "CLOSED" aus"
       def sessionExpireTest(options={})
         assert_valid_keys(options, :sessionId)
         assert_keys_exists(options, :sessionId)
         execute(:sessionExpireTest, options)
       end
 
-      # simuliert die automatische Rücküberweisung für überzahlte Beträge
+      # "simuliert die automatische Rücküberweisung für überzahlte Beträge"
       def sessionRefundTest(options={})
         assert_valid_keys(options, :sessionId)
         assert_keys_exists(options, :sessionId)
