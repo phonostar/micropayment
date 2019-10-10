@@ -116,7 +116,7 @@ module Micropayment
       # "erzeugt einen neuen Bezahlvorgang"
       # => "löst die Benachrichtigung sessionStatus mit dem Status "INIT" bzw. "REINIT" aus"
       def sessionCreate(options={})
-        assert_valid_keys(options, :customerId, :sessionId, :project, :projectCampaign, :account, :webmasterCampaign, :amount, :currency, :title, :payText, :ip, :freeParams, :mandateRef)
+        assert_valid_keys(options, :customerId, :sessionId, :project, :projectCampaign, :account, :webmasterCampaign, :amount, :currency, :title, :payText, :ip, :freeParams, :mandateRef, :mandateRecur)
         assert_keys_exists(options, :customerId, :project)
         execute(:sessionCreate, options)
       end
